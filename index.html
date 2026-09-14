@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Delegate, Motherfucker — a manifesto for giving agents the goal, the tools, and the job." />
+  <title>Delegate, Motherfucker.</title>
+  <style>
+    :root {
+      --bg: #f5f0e6;
+      --ink: #111111;
+      --muted: #6f6a60;
+      --panel: #fffaf0;
+      --line: #111111;
+      --shadow: 7px 7px 0 #111111;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(17,17,17,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(17,17,17,.035) 1px, transparent 1px),
+        var(--bg);
+      background-size: 22px 22px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    ::selection { background: var(--ink); color: var(--bg); }
+
+    a { color: inherit; }
+
+    .wrap {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .ticker {
+      border-bottom: 2px solid var(--line);
+      border-top: 2px solid var(--line);
+      overflow: hidden;
+      white-space: nowrap;
+      background: var(--ink);
+      color: var(--bg);
+      font: 700 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .ticker-track {
+      display: inline-block;
+      padding: 9px 0;
+      min-width: 200%;
+      animation: scroll 22s linear infinite;
+    }
+
+    @keyframes scroll {
+      to { transform: translateX(-50%); }
+    }
+
+    header {
+      border-bottom: 3px solid var(--line);
+      padding: 22px 0;
+      background: rgba(245,240,230,.92);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(8px);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      font: 800 14px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      text-transform: uppercase;
+    }
+
+    .brand { text-decoration: none; }
+    .nav-links { display: flex; gap: 16px; flex-wrap: wrap; }
+    .nav-links a { text-decoration: none; border-bottom: 2px solid transparent; }
+    .nav-links a:hover { border-bottom-color: var(--ink); }
+
+    .hero {
+      position: relative;
+      padding: 76px 0 58px;
+      border-bottom: 3px solid var(--line);
+      background-image:
+        linear-gradient(90deg, rgba(245,240,230,.97) 0%, rgba(245,240,230,.90) 44%, rgba(245,240,230,.42) 72%, rgba(17,17,17,.20) 100%),
+        url("delegate-agents-bg.png");
+      background-size: cover;
+      background-position: center 34%;
+      background-repeat: no-repeat;
+      min-height: 680px;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero .wrap { position: relative; z-index: 1; }
+    .hero h1, .hero p { text-shadow: 0 1px 0 rgba(245,240,230,.75); }
+
+    @media (max-width: 720px) {
+      .hero {
+        min-height: 620px;
+        background-image:
+          linear-gradient(rgba(245,240,230,.91), rgba(245,240,230,.76)),
+          url("delegate-agents-bg.png");
+        background-position: 52% top;
+      }
+    }
+
+    .eyebrow {
+      display: inline-block;
+      border: 2px solid var(--line);
+      padding: 8px 10px;
+      font: 800 12px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      text-transform: uppercase;
+      box-shadow: 4px 4px 0 var(--line);
+      background: var(--panel);
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 1000px;
+      font-size: clamp(58px, 11vw, 160px);
+      line-height: .82;
+      letter-spacing: -.075em;
+      text-transform: uppercase;
+      font-weight: 950;
+    }
+
+    .hero p {
+      max-width: 780px;
+      margin: 28px 0 0;
+      font-size: clamp(21px, 3vw, 34px);
+      line-height: 1.05;
+      font-weight: 760;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+      align-items: center;
+      min-height: 54px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 3px solid var(--line);
+      background: var(--ink);
+      color: var(--bg);
+      padding: 14px 18px;
+      font: 900 14px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 5px 5px 0 #777168;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+    }
+
+    .btn:hover { transform: translate(2px,2px); box-shadow: 3px 3px 0 #777168; }
+    .btn.alt { background: var(--panel); color: var(--ink); }
+    #manualButton { position: relative; transition: transform .08s linear; }
+
+    section {
+      padding: 64px 0;
+      border-bottom: 3px solid var(--line);
+    }
+
+    h2 {
+      margin: 0 0 28px;
+      font-size: clamp(36px, 6vw, 76px);
+      line-height: .9;
+      letter-spacing: -.045em;
+      text-transform: uppercase;
+    }
+
+    .manifesto {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, .7fr);
+      gap: 38px;
+      align-items: start;
+    }
+
+    .manifesto-copy {
+      font-size: clamp(21px, 2.6vw, 31px);
+      font-weight: 730;
+      line-height: 1.16;
+    }
+
+    .manifesto-copy p { margin: 0 0 24px; }
+    .manifesto-copy strong { text-decoration: underline; text-decoration-thickness: 3px; }
+
+    .terminal {
+      position: sticky;
+      top: 110px;
+      border: 3px solid var(--line);
+      background: var(--ink);
+      color: #eee7da;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      min-height: 275px;
+      font: 600 14px/1.6 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .terminal .bar {
+      display: flex;
+      gap: 7px;
+      margin-bottom: 18px;
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: #eee7da; opacity: .75; }
+    .terminal .muted { color: #9d978e; }
+    .cursor { animation: blink .8s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .values {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: clamp(15px, 1.6vw, 20px);
+      background: var(--panel);
+    }
+
+    .values th, .values td {
+      border: 3px solid var(--line);
+      padding: 18px;
+      vertical-align: top;
+    }
+
+    .values th {
+      text-align: left;
+      text-transform: uppercase;
+      font: 900 13px/1.1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .values td:last-child { font-weight: 900; }
+
+    .rules {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 18px;
+    }
+
+    .rule {
+      border: 3px solid var(--line);
+      background: var(--panel);
+      box-shadow: 5px 5px 0 var(--line);
+      padding: 24px;
+    }
+
+    .rule span {
+      display: block;
+      font: 900 13px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .rule h3 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .rule p { margin: 0; font-size: 18px; }
+
+    .compare {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 18px;
+    }
+
+    .compare-card {
+      border: 3px solid var(--line);
+      padding: 24px;
+      background: var(--panel);
+    }
+
+    .compare-card h3 {
+      margin: 0 0 20px;
+      text-transform: uppercase;
+      font-size: 28px;
+    }
+
+    .prompt {
+      border-top: 2px solid var(--line);
+      padding: 16px 0;
+      font: 700 17px/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .prompt:first-of-type { border-top: 0; padding-top: 0; }
+    .bad .prompt { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 2px; }
+
+    .counter-box {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: end;
+      border: 3px solid var(--line);
+      padding: 28px;
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .counter-number {
+      font-size: clamp(56px, 9vw, 120px);
+      font-weight: 950;
+      line-height: .75;
+      letter-spacing: -.05em;
+    }
+
+    .counter-label {
+      margin-top: 14px;
+      font: 800 13px/1.3 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      text-transform: uppercase;
+    }
+
+    .status-pill {
+      border: 2px solid currentColor;
+      padding: 10px 12px;
+      font: 800 12px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    footer {
+      padding: 44px 0 70px;
+      font: 800 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      text-transform: uppercase;
+    }
+
+    .footer-grid {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .stamp {
+      border: 3px solid var(--line);
+      padding: 13px 15px;
+      transform: rotate(-2deg);
+      display: inline-block;
+      background: var(--panel);
+      box-shadow: 4px 4px 0 var(--line);
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      max-width: min(420px, calc(100vw - 36px));
+      border: 3px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+      padding: 14px 16px;
+      font: 800 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      transform: translateY(140%);
+      transition: transform .22s ease;
+      z-index: 99;
+      text-transform: uppercase;
+    }
+
+    .toast.show { transform: translateY(0); }
+
+    @media (max-width: 800px) {
+      .manifesto, .rules, .compare, .counter-box { grid-template-columns: 1fr; }
+      .terminal { position: static; }
+      nav { align-items: flex-start; }
+      .nav-links { justify-content: flex-end; }
+      .values { display: block; overflow-x: auto; }
+      .values th, .values td { min-width: 210px; }
+      .status-pill { justify-self: start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { scroll-behavior: auto !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      DELEGATE THE BORING SHIT • GIVE THE AGENT TOOLS • STOP COPYING BETWEEN TABS • HUMAN IN THE LOOP ≠ HUMAN IS THE LOOP •
+      DELEGATE THE BORING SHIT • GIVE THE AGENT TOOLS • STOP COPYING BETWEEN TABS • HUMAN IN THE LOOP ≠ HUMAN IS THE LOOP •
+    </div>
+  </div>
+
+  <header>
+    <div class="wrap">
+      <nav>
+        <a class="brand" href="#top">DMF / 2026</a>
+        <div class="nav-links">
+          <a href="#manifesto">Manifesto</a>
+          <a href="#values">Values</a>
+          <a href="#rules">Rules</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow">A manifesto for people with better shit to do</div>
+        <h1>Delegate,<br>Motherfucker.</h1>
+        <p>Computers can use computers now. Stop treating agents like autocomplete and give them the damn job.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#manifesto">Read the manifesto</a>
+          <button class="btn alt" id="manualButton" type="button">Do it yourself</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="manifesto">
+      <div class="wrap manifesto">
+        <div>
+          <h2>Do you agent?</h2>
+          <div class="manifesto-copy">
+            <p>We spent years clicking buttons that a machine could have clicked for us.</p>
+            <p>We copy data from one tab to another. We write the same status update for the 47th time. We open twelve tools, read twelve dashboards, move twelve tickets, and call it <em>productivity</em>.</p>
+            <p>We have computers.</p>
+            <p><strong>The computers can use computers now.</strong></p>
+            <p>Give agents the goal. Give them the context. Give them the tools. Give them boundaries.</p>
+            <p>Then get out of the way.</p>
+          </div>
+        </div>
+
+        <aside class="terminal" aria-label="Fake agent terminal">
+          <div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <div><span class="muted">$</span> agent run boring-shit</div>
+          <div class="muted">↳ reading the docs you ignored...</div>
+          <div class="muted">↳ checking the spreadsheet...</div>
+          <div class="muted">↳ updating the ticket...</div>
+          <div class="muted">↳ drafting the follow-up...</div>
+          <div class="muted">↳ human intervention avoided successfully</div>
+          <div><span class="muted">$</span> <span id="terminalStatus">waiting for another tedious task</span><span class="cursor">█</span></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="values">
+      <div class="wrap">
+        <h2>Our values</h2>
+        <table class="values">
+          <thead>
+            <tr><th>They say</th><th>What happens</th><th>We do</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>“AI-assisted workflow”</td><td>You still do 93% of the workflow.</td><td>Delegate, motherfucker.</td></tr>
+            <tr><td>“Copilot”</td><td>A chatbot watches you work.</td><td>Delegate, motherfucker.</td></tr>
+            <tr><td>“10× productivity”</td><td>10× more tabs.</td><td>Delegate, motherfucker.</td></tr>
+            <tr><td>“Human in the loop”</td><td>The human <em>is</em> the loop.</td><td>Delegate, motherfucker.</td></tr>
+            <tr><td>“AI transformation”</td><td>Someone bought 4,000 licenses.</td><td>Delegate, motherfucker.</td></tr>
+            <tr><td>“Agentic”</td><td>A prompt with a while loop.</td><td>Delegate, motherfucker.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="rules">
+      <div class="wrap">
+        <h2>The rules</h2>
+        <div class="rules">
+          <article class="rule">
+            <span>Rule 01</span>
+            <h3>Delegate outcomes.</h3>
+            <p>“Open Salesforce and copy this field” is automation. “Find the deals at risk and prepare account plans” is delegation.</p>
+          </article>
+          <article class="rule">
+            <span>Rule 02</span>
+            <h3>Give agents tools.</h3>
+            <p>APIs. Browsers. Files. Databases. Inboxes. Calendars. Let the agent operate the software.</p>
+          </article>
+          <article class="rule">
+            <span>Rule 03</span>
+            <h3>Finish the fucking job.</h3>
+            <p>Research without action is a report. A draft nobody sends is a draft. A ticket nobody updates is another ticket.</p>
+          </article>
+          <article class="rule">
+            <span>Rule 04</span>
+            <h3>Keep humans where humans matter.</h3>
+            <p>Judgment. Taste. Responsibility. Relationships. Deciding what the hell we should be doing in the first place.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Stop chatting.<br>Start delegating.</h2>
+        <div class="compare">
+          <div class="compare-card bad">
+            <h3>Don't ask</h3>
+            <div class="prompt">“How should I prepare for this customer meeting?”</div>
+            <div class="prompt">“Can you help me analyze this spreadsheet?”</div>
+            <div class="prompt">“Can you draft a follow-up?”</div>
+          </div>
+          <div class="compare-card">
+            <h3>Say this</h3>
+            <div class="prompt">“Read the account history, find the open issues, identify expansion opportunities, and prepare my briefing.”</div>
+            <div class="prompt">“Find what changed, explain why, flag anything weird, and update the forecast.”</div>
+            <div class="prompt">“Figure out who needs a follow-up, draft the right message, and put it in my inbox for approval.”</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="counter-box">
+          <div>
+            <div class="counter-number" id="counter">000042</div>
+            <div class="counter-label">pointless human clicks avoided on this completely fabricated counter</div>
+          </div>
+          <div class="status-pill" id="statusPill">agent status: caffeinated*</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-grid">
+      <div>
+        <div class="stamp">THIS WEBSITE WAS MOSTLY DELEGATED</div>
+        <p>*agents do not consume caffeine. legal made us add this.</p>
+      </div>
+      <div>Made for people who are done being middleware.</div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">Nice try. That sounds manual.</div>
+
+  <script>
+    const manualButton = document.getElementById('manualButton');
+    const toast = document.getElementById('toast');
+    const terminalStatus = document.getElementById('terminalStatus');
+    const counter = document.getElementById('counter');
+    const statusPill = document.getElementById('statusPill');
+
+    const statuses = [
+      'waiting for another tedious task',
+      'reading 63 tabs so you do not have to',
+      'moving data between systems like a grown-up computer',
+      'drafting the message you were avoiding',
+      'pretending the CRM was always up to date',
+      'turning vague intent into annoying concrete action'
+    ];
+
+    const pillStatuses = [
+      'agent status: caffeinated*',
+      'agent status: overqualified',
+      'agent status: opening tabs responsibly',
+      'agent status: doing the boring shit',
+      'agent status: suspiciously productive'
+    ];
+
+    let clicksAvoided = 42;
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+
+    function moveManualButton() {
+      const x = Math.round((Math.random() - 0.5) * 180);
+      const y = Math.round((Math.random() - 0.5) * 70);
+      manualButton.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    manualButton.addEventListener('mouseenter', moveManualButton);
+    manualButton.addEventListener('focus', () => {
+      manualButton.style.transform = 'none';
+    });
+    manualButton.addEventListener('click', () => {
+      clicksAvoided += Math.floor(Math.random() * 17) + 3;
+      counter.textContent = String(clicksAvoided).padStart(6, '0');
+      terminalStatus.textContent = statuses[Math.floor(Math.random() * statuses.length)];
+      statusPill.textContent = pillStatuses[Math.floor(Math.random() * pillStatuses.length)];
+      showToast('Task delegated: avoiding unnecessary effort.');
+      manualButton.style.transform = 'none';
+    });
+
+    setInterval(() => {
+      clicksAvoided += Math.floor(Math.random() * 4) + 1;
+      counter.textContent = String(clicksAvoided).padStart(6, '0');
+    }, 2400);
+
+    setInterval(() => {
+      document.title = document.title.startsWith('Delegate')
+        ? 'fuck this → delegated ✓'
+        : 'Delegate, Motherfucker.';
+    }, 3200);
+  </script>
+</body>
+</html>
